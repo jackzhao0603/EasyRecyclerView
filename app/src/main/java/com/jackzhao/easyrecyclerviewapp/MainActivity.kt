@@ -33,34 +33,29 @@ class MainActivity : AppCompatActivity() {
 
         // Self Adapter
         val recyclerView: EasyRecyclerView = findViewById(R.id.rv_main)
+        recyclerView.addItemDecoration(this);
         val adapter = SelfTextAdapter()
         adapter.dataList = dataList
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(this);
 
 
-        // Drag Adapter
-        val dragAdapter = DragAdapter()
-        dragAdapter.setOriginalAdpater(adapter)
-        dragAdapter.addTouchHelperRecyclerView(
-            recyclerView,
-            object : BaseAdapter.ItemChangedListener<Any> {
-                override fun itemMoved(fromPosition: Int, toPosition: Int) {
-                    Toast.makeText(
-                        applicationContext,
-                        "$fromPosition  --> $toPosition", Toast.LENGTH_LONG
-                    ).show();
-                }
+        // Enable Drag(options)
+        recyclerView.enableDrag(adapter, object : EasyRecyclerView.Draglister {
+            override fun onItemMoved(fromPosition: Int, toPosition: Int) {
+                Toast.makeText(
+                    applicationContext,
+                    "$fromPosition  --> $toPosition", Toast.LENGTH_LONG
+                ).show();
+            }
 
-                override fun itemSwiped(pos: Int, data: Any?) {
-                    Toast.makeText(
-                        applicationContext,
-                        "$pos  --> $data", Toast.LENGTH_LONG
-                    ).show();
-                }
-            })
-        recyclerView.adapter = dragAdapter
-        recyclerView.addItemDecoration(this);
+            override fun onItemSwiped(pos: Int, data: Any?) {
+                Toast.makeText(
+                    applicationContext,
+                    "$pos  --> $data", Toast.LENGTH_LONG
+                ).show();
+            }
+        })
+
     }
 
 

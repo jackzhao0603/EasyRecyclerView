@@ -3,9 +3,12 @@ package com.jackzhao.easyrecyclerview
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jackzhao.easyrecyclerview.adapter.BaseAdapter
+import com.jackzhao.easyrecyclerview.adapter.DragAdapter
 import com.jackzhao.easyrecyclerview.divider.RecyclerViewDivider
 
 class EasyRecyclerView : RecyclerView {
@@ -67,4 +70,32 @@ class EasyRecyclerView : RecyclerView {
             )
         )
     }
+
+
+    fun enableDrag(
+        adapter: BaseAdapter<Any>,
+        dragLister: Draglister
+    ) {
+        val dragAdapter = DragAdapter()
+        dragAdapter.setOriginalAdpater(adapter)
+        dragAdapter.addTouchHelperRecyclerView(
+            this,
+            object : BaseAdapter.ItemChangedListener<Any> {
+                override fun itemMoved(fromPosition: Int, toPosition: Int) {
+                    dragLister.onItemMoved(fromPosition, toPosition)
+                }
+
+                override fun itemSwiped(pos: Int, data: Any?) {
+                    dragLister.onItemSwiped(pos, data)
+                }
+            })
+        this.adapter = dragAdapter
+    }
+
+
+    interface Draglister {
+        fun onItemMoved(fromPosition: Int, toPosition: Int)
+        fun onItemSwiped(pos: Int, data: Any?)
+    }
+
 }
