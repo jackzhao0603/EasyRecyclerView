@@ -3,6 +3,7 @@ package com.jackzhao.easyrecyclerviewapp
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jackzhao.easyrecyclerview.EasyRecyclerView
 import com.jackzhao.easyrecyclerview.adapter.BaseAdapter
 import com.jackzhao.easyrecyclerview.adapter.DragAdapter
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val recyclerView: EasyRecyclerView = findViewById(R.id.rv_main)
+        val swipeRefresh: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
 
 
         val dataList = ArrayList<Any>()
@@ -32,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 //        recyclerView.addItemDecoration(this);
 
         // Self Adapter
-        val recyclerView: EasyRecyclerView = findViewById(R.id.rv_main)
         recyclerView.addItemDecoration(this);
         val adapter = SelfTextAdapter()
         adapter.dataList = dataList
@@ -40,21 +42,33 @@ class MainActivity : AppCompatActivity() {
 
 
         // Enable Drag(options)
-        recyclerView.enableDrag(adapter, object : EasyRecyclerView.Draglister {
-            override fun onItemMoved(fromPosition: Int, toPosition: Int) {
-                Toast.makeText(
-                    applicationContext,
-                    "$fromPosition  --> $toPosition", Toast.LENGTH_LONG
-                ).show();
-            }
+//        recyclerView.enableDrag(adapter, object : EasyRecyclerView.Draglister {
+//            override fun onItemMoved(fromPosition: Int, toPosition: Int) {
+//                Toast.makeText(
+//                    applicationContext,
+//                    "$fromPosition  --> $toPosition", Toast.LENGTH_LONG
+//                ).show();
+//            }
+//
+//            override fun onItemSwiped(pos: Int, data: Any?) {
+//                Toast.makeText(
+//                    applicationContext,
+//                    "$pos  --> $data", Toast.LENGTH_LONG
+//                ).show();
+//            }
+//        })
 
-            override fun onItemSwiped(pos: Int, data: Any?) {
-                Toast.makeText(
-                    applicationContext,
-                    "$pos  --> $data", Toast.LENGTH_LONG
-                ).show();
-            }
-        })
+        swipeRefresh.setOnRefreshListener {
+            Thread {
+                Thread.sleep(1000)
+                dataList.reverse()
+                runOnUiThread {
+                    adapter.notifyDataSetChanged()
+                    swipeRefresh.isRefreshing = false
+                }
+            }.start()
+        }
+
 
     }
 
