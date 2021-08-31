@@ -1,6 +1,5 @@
 package com.jackzhao.easyrecyclerviewapp;
 
-import com.jackzhao.easyrecyclerview.ViewHolder.OneLineTextViewHolder;
 import com.jackzhao.easyrecyclerview.ViewHolder.SimpleTextViewHolder;
 import com.jackzhao.easyrecyclerview.adapter.BaseAdapter;
 import com.jackzhao.easyrecyclerview.data.SimpleTextData;
