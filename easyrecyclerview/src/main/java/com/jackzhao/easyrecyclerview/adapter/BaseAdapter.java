@@ -1,5 +1,7 @@
 package com.jackzhao.easyrecyclerview.adapter;
 
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -9,6 +11,9 @@ import com.jackzhao.easyrecyclerview.ViewHolder.BaseViewHolder;
 import com.jackzhao.easyrecyclerview.utils.CollectionUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +24,7 @@ import java.util.Map;
  */
 
 public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> implements IBaseAdapter {
-    private static final String TAG = "AdAdapter";
+    private static final String TAG = "BaseAdapter";
 
     protected Map<Integer, Class> viewHolderTypeMap = new HashMap<>();
     protected Map<Integer, ViewHolderGenerator> viewHolderGeneratorMap = new HashMap<>();
@@ -109,8 +114,13 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
 
-    public void setDataList(List<T> dataList) {
+    public List bindData(Context context, List dataList) {
         this.dataList = dataList;
+        ListProxy proxy = new ListProxy();
+        proxy.newProxyInstance(dataList,
+                () -> new Handler(context.getMainLooper()).post(() -> this.notifyDataSetChanged()));
+        List resultList = (List<T>) proxy.getProxyInstance();
+        return resultList;
     }
 
     @Override
@@ -152,4 +162,39 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         viewHolderTypeMap.put(data.hashCode(), viewHolder);
     }
 
+
+    interface DataListener {
+        void onDataChanged();
+    }
+
+    class ListProxy implements InvocationHandler {
+        private List realObject;
+        private DataListener listener;
+        private Handler handler = new Handler();
+        private Runnable  runnable = () -> listener.onDataChanged();
+
+        public Object newProxyInstance(List realObject, DataListener listener) {
+            this.realObject = realObject;
+            this.listener = listener;
+            return Proxy.newProxyInstance(realObject.getClass().getClassLoader(),
+                    realObject.getClass().getInterfaces(), this);
+        }
+
+        public Object getProxyInstance() {
+            return Proxy.newProxyInstance(realObject.getClass().getClassLoader(),
+                    realObject.getClass().getInterfaces(), this);
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] objects) throws Throwable {
+            Log.e(TAG, "invoke: " + method);
+            Object result = method.invoke(realObject, objects);
+            if (method.getName().equals("set")) {
+                handler.removeCallbacks(runnable);
+                handler.postDelayed(runnable, 100);
+
+            }
+            return result;
+        }
+    }
 }

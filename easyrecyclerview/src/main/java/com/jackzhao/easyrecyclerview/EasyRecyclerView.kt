@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jackzhao.easyrecyclerview.adapter.BaseAdapter
 import com.jackzhao.easyrecyclerview.adapter.DragAdapter
 import com.jackzhao.easyrecyclerview.divider.RecyclerViewDivider
+import me.jingbin.library.ByRecyclerView
 
-class EasyRecyclerView : RecyclerView {
+class EasyRecyclerView : ByRecyclerView {
     constructor(context: Context) : super(context) {
         this.setLinearLayout(context, LinearLayoutManager.VERTICAL)
     }

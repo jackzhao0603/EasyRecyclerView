@@ -1,17 +1,13 @@
 package com.jackzhao.easyrecyclerviewapp
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jackzhao.easyrecyclerview.EasyRecyclerView
-import com.jackzhao.easyrecyclerview.adapter.BaseAdapter
-import com.jackzhao.easyrecyclerview.adapter.DragAdapter
-import com.jackzhao.easyrecyclerview.adapter.SimpleTextAdapter
 import com.jackzhao.easyrecyclerview.data.SimpleTextData
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var dataList: List<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,10 +16,11 @@ class MainActivity : AppCompatActivity() {
         val swipeRefresh: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
 
 
-        val dataList = ArrayList<Any>()
+
+        dataList = ArrayList<Any>()
         for (i in 1..10) {
-            dataList.add(SimpleTextData("title$i", "context$i"))
-            dataList.add(SelfTextData("title$i"))
+            (dataList as ArrayList<Any>).add(SimpleTextData("title$i", "context$i"))
+            (dataList as ArrayList<Any>).add(SelfTextData("title$i"))
         }
 
 
@@ -37,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         // Self Adapter
         recyclerView.addItemDecoration(this);
         val adapter = SelfTextAdapter()
-        adapter.dataList = dataList
+        dataList = adapter.bindData(applicationContext, dataList)
         recyclerView.adapter = adapter
 
 
@@ -61,9 +58,8 @@ class MainActivity : AppCompatActivity() {
         swipeRefresh.setOnRefreshListener {
             Thread {
                 Thread.sleep(1000)
-                dataList.reverse()
+                (dataList as MutableList<Any?>).reverse()
                 runOnUiThread {
-                    adapter.notifyDataSetChanged()
                     swipeRefresh.isRefreshing = false
                 }
             }.start()
