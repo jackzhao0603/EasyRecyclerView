@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jackzhao.easyrecyclerview.EasyRecyclerView
 import com.jackzhao.easyrecyclerview.data.SimpleTextData
+import me.jingbin.library.ByRecyclerView
+import me.jingbin.library.ByRecyclerView.OnLoadMoreListener
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var dataList: MutableList<Any>
@@ -13,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val recyclerView: EasyRecyclerView = findViewById(R.id.rv_main)
-        val swipeRefresh: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
 
 
 
@@ -37,6 +39,18 @@ class MainActivity : AppCompatActivity() {
         dataList = adapter.bindData(applicationContext, dataList) as MutableList<Any>
         recyclerView.adapter = adapter
 
+        recyclerView.setOnRefreshListener {
+            Thread {
+                Thread.sleep(1000)
+                dataList.reverse()
+                runOnUiThread { recyclerView.isRefreshing = false }
+            }.start()
+
+        }
+        recyclerView.setOnLoadMoreListener(OnLoadMoreListener {
+            recyclerView.loadMoreFail() // 加载更多失败,点击重试
+        })
+
 
         // Enable Drag(options)
 //        recyclerView.enableDrag(adapter, object : EasyRecyclerView.Draglister {
@@ -54,16 +68,6 @@ class MainActivity : AppCompatActivity() {
 //                ).show();
 //            }
 //        })
-
-        swipeRefresh.setOnRefreshListener {
-            Thread {
-                Thread.sleep(1000)
-                dataList.reverse()
-                runOnUiThread {
-                    swipeRefresh.isRefreshing = false
-                }
-            }.start()
-        }
 
 
     }

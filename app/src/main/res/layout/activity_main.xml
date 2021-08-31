@@ -7,15 +7,10 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <com.jackzhao.easyrecyclerview.EasyRecyclerView
-            android:id="@+id/rv_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.jackzhao.easyrecyclerview.EasyRecyclerView
+        android:id="@+id/rv_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
