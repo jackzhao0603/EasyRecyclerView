@@ -7,7 +7,7 @@ import com.jackzhao.easyrecyclerview.EasyRecyclerView
 import com.jackzhao.easyrecyclerview.data.SimpleTextData
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var dataList: List<*>
+    private lateinit var dataList: MutableList<Any>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        dataList = ArrayList<Any>()
+        dataList = ArrayList()
         for (i in 1..10) {
             (dataList as ArrayList<Any>).add(SimpleTextData("title$i", "context$i"))
             (dataList as ArrayList<Any>).add(SelfTextData("title$i"))
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         // Self Adapter
         recyclerView.addItemDecoration(this);
         val adapter = SelfTextAdapter()
-        dataList = adapter.bindData(applicationContext, dataList)
+        dataList = adapter.bindData(applicationContext, dataList) as MutableList<Any>
         recyclerView.adapter = adapter
 
 
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         swipeRefresh.setOnRefreshListener {
             Thread {
                 Thread.sleep(1000)
-                (dataList as MutableList<Any?>).reverse()
+                dataList.reverse()
                 runOnUiThread {
                     swipeRefresh.isRefreshing = false
                 }
