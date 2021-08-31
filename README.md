@@ -14,7 +14,6 @@
             maven { url "https://jitpack.io" }
         }
     }
-//    implementation project(':easyrecyclerview')
     ```
 2. Add the dependency
     ```gradle
