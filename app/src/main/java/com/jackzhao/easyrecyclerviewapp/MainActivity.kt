@@ -2,10 +2,8 @@ package com.jackzhao.easyrecyclerviewapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jackzhao.easyrecyclerview.EasyRecyclerView
 import com.jackzhao.easyrecyclerview.data.SimpleTextData
-import me.jingbin.library.ByRecyclerView
 import me.jingbin.library.ByRecyclerView.OnLoadMoreListener
 
 
