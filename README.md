@@ -14,11 +14,12 @@
             maven { url "https://jitpack.io" }
         }
     }
+//    implementation project(':easyrecyclerview')
     ```
 2. Add the dependency
     ```gradle
      dependencies {
-	        implementation 'com.github.jackzhao0603:EasyRecyclerView:Tag'
+	        implementation 'com.github.jackzhao0603:EasyRecyclerView:v0.1.3'
 	 }
 
     ```
