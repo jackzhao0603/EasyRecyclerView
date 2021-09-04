@@ -49,7 +49,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.jackzhao0603'
-                artifactId = 'banner'
+                artifactId = 'easyrecyclerview'
                 version = 'v0.1.1'
             }
         }
